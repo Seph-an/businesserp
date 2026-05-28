@@ -3,7 +3,7 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aureuserp/temp-media/master/aureus-logo-dark.png">
       <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/aureuserp/temp-media/master/aureus-logo-light.png">
-      <img src="https://raw.githubusercontent.com/aureuserp/temp-media/master/aureus-logo-light.png" alt="AureusERP logo">
+      <img src="https://raw.githubusercontent.com/aureuserp/temp-media/master/aureus-logo-light.png" alt="Gap Recruitment logo">
     </picture>
   </a>  
 </p>
@@ -14,7 +14,7 @@
 <a href="https://packagist.org/packages/aureuserp/aureuserp"><img src="https://poser.pugx.org/aureuserp/aureuserp/license.svg" alt="License"></a>
 </p>
 
-<h1 align="center">Aureus ERP</h1>
+<h1 align="center">Gap Recruitment</h1>
 
 <p align="center">
   <strong>Open-Source Enterprise Resource Planning for Modern Businesses</strong>
@@ -30,7 +30,7 @@
 
 1. [Introduction](#-introduction)
 2. [Key Features](#-key-features)
-3. [Why Choose Aureus ERP?](#-why-choose-aureus-erp)
+3. [Why Choose Gap Recruitment?](#-why-choose-gap-recruitment)
 4. [Requirements](#-requirements)
 5. [Quick Start](#-quick-start)
 6. [Plugin System](#-plugin-system)
@@ -45,9 +45,9 @@
 
 ## 🚀 Introduction
 
-Aureus ERP is a comprehensive, open-source Enterprise Resource Planning (ERP) solution designed for Small and Medium Enterprises (SMEs) and large-scale organizations. Built on **[Laravel 13](https://laravel.com)**, the most popular PHP framework, and **[FilamentPHP 5](https://filamentphp.com)**, a cutting-edge admin panel framework, Aureus ERP offers an extensible and developer-friendly platform for managing every aspect of your business operations.
+Gap Recruitment is a comprehensive, open-source Enterprise Resource Planning (ERP) solution designed for Small and Medium Enterprises (SMEs) and large-scale organizations. Built on **[Laravel 13](https://laravel.com)**, the most popular PHP framework, and **[FilamentPHP 5](https://filamentphp.com)**, a cutting-edge admin panel framework, Gap Recruitment offers an extensible and developer-friendly platform for managing every aspect of your business operations.
 
-Whether you're managing accounting, inventory, HR, CRM, or projects, Aureus ERP provides a modular approach that grows with your business.
+Whether you're managing accounting, inventory, HR, CRM, or projects, Gap Recruitment provides a modular approach that grows with your business.
 
 ---
 
@@ -65,7 +65,7 @@ Whether you're managing accounting, inventory, HR, CRM, or projects, Aureus ERP 
 
 ---
 
-## 🎯 Why Choose Aureus ERP?
+## 🎯 Why Choose Gap Recruitment?
 
 | Feature | Benefit |
 |---------|---------|
@@ -102,7 +102,7 @@ Ensure your development environment meets the following requirements:
 
 ## ⚡ Quick Start
 
-Get Aureus ERP up and running in just 4 simple steps:
+Get Gap Recruitment up and running in just 4 simple steps:
 
 ### Step 1: Clone the Repository
 
@@ -143,7 +143,7 @@ Visit `http://localhost:8000` and log in with your admin credentials!
 
 ## 🧩 Plugin System
 
-AureusERP features a powerful modular plugin system that allows you to customize your ERP installation based on your business needs. Choose only the modules you need to keep your system lean and efficient.
+Gap Recruitment features a powerful modular plugin system that allows you to customize your ERP installation based on your business needs. Choose only the modules you need to keep your system lean and efficient.
 
 ### 📦 Core Plugins (System Plugins)
 
@@ -260,7 +260,7 @@ Some plugins require other plugins to function properly. The installation system
 
 ## 🎨 Customization
 
-AureusERP is designed to be highly customizable, allowing you to tailor the system to your specific business needs:
+Gap Recruitment is designed to be highly customizable, allowing you to tailor the system to your specific business needs:
 
 ### Plugin Customization
 - 🔹 Install only the plugins you need
@@ -330,7 +330,7 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 
 ## 📄 License
 
-AureusERP is truly open-source ERP framework that will always be **free** under the [MIT License](LICENSE).
+Gap Recruitment is truly open-source ERP framework that will always be **free** under the [MIT License](LICENSE).
 
 ### What This Means
 - ✅ Free to use for commercial and personal projects
@@ -342,13 +342,13 @@ AureusERP is truly open-source ERP framework that will always be **free** under 
 
 ## 🔒 Security
 
-Security is a top priority for AureusERP. We take all security vulnerabilities seriously.
+Security is a top priority for Gap Recruitment. We take all security vulnerabilities seriously.
 
 ### Reporting Security Vulnerabilities
 
 **⚠️ Please DO NOT disclose security vulnerabilities publicly.**
 
-If you discover a security vulnerability in AureusERP, please report it responsibly:
+If you discover a security vulnerability in Gap Recruitment, please report it responsibly:
 
 📧 **Email:** support@webkul.com
 
@@ -364,7 +364,7 @@ We will acknowledge your email within 48 hours and provide a detailed response w
 
 ## 💬 Support & Community
 
-Need help or want to connect with other AureusERP users?
+Need help or want to connect with other Gap Recruitment users?
 
 ### 📚 Documentation
 - 📖 **Developer Documentation:** [devdocs.aureuserp.com](https://devdocs.aureuserp.com/) - Technical guides, API references, and development resources

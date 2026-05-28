@@ -86,7 +86,7 @@
 			<!-- Copyright Section -->
 			<div class="flex flex-col justify-between pt-8 mt-8 border-t border-gray-200 md:flex-row {{ app()->getLocale() === 'ar' ? 'md:flex-row-reverse' : '' }}">
 				<div class="text-sm text-gray-600">
-					{{ __('website::filament/app.footer.copyright') }} © <a href="https://aureuserp.com/" class="text-primary-500" target="_blank">AureusERP</a>
+					{{ __('website::filament/app.footer.copyright') }} © <a href="https://aureuserp.com/" class="text-primary-500" target="_blank">Gap Recruitment</a>
 				</div>
 
 				<div class="mt-2 text-sm text-gray-600 md:mt-0">

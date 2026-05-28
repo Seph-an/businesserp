@@ -2,9 +2,9 @@
 <rect x="0.5" y="0.5" width="63" height="63" rx="12.5" fill="white"/>
 <rect x="0.5" y="0.5" width="63" height="63" rx="12.5" stroke="#DCE0E5"/>
 <rect width="48" height="48" transform="translate(8 8)" fill="white"/>
-<path d="M14 15.7888C14 13.6963 15.6963 12 17.7888 12H46.2112C48.3037 12 50 13.6963 50 15.7888V48.2112C50 50.3037 48.3037 52 46.2112 52H17.7888C15.6963 52 14 50.3037 14 48.2112V15.7888Z" fill="#0070F2"/>
+<path d="M14 15.7888C14 13.6963 15.6963 12 17.7888 12H46.2112C48.3037 12 50 13.6963 50 15.7888V48.2112C50 50.3037 48.3037 52 46.2112 52H17.7888C15.6963 52 14 50.3037 14 48.2112V15.7888Z" fill="#51D4D6"/>
 <rect x="38" y="28" width="8" height="8" rx="1.26293" fill="white"/>
-<rect x="37.3707" y="38" width="8.84052" height="8.84052" rx="1.26293" fill="#FDB421"/>
+<rect x="37.3707" y="38" width="8.84052" height="8.84052" rx="1.26293" fill="#1e1e1e"/>
 <rect x="28" y="28" width="8" height="8" rx="1.26293" fill="white"/>
 <rect x="27.2672" y="38" width="8.84052" height="8.84052" rx="1.26293" fill="white"/>
 <rect x="18" y="28" width="8" height="8" rx="1.26293" fill="white"/>

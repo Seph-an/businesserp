@@ -1,6 +1,6 @@
 ---
 name: 🐛 Bug Report
-about: Create a detailed report to help us improve AureusERP.
+about: Create a detailed report to help us improve Gap Recruitment.
 title: ""
 labels: bug
 assignees: ""

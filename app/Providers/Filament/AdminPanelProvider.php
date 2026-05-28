@@ -38,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->favicon(asset('images/favicon.ico'))
-            ->brandLogo(asset('images/logo.svg'))
+            ->brandLogo(asset('images/logo.webp'))
             ->brandLogoHeight('2rem')
             ->passwordReset()
             ->emailVerification()

@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'aureus'   => 'أوريوس',
+    'aureus'   => 'Gap Recruitment',
     'european' => 'أوروبي',
 ];

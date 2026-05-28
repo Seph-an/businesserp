@@ -28,7 +28,7 @@ class CustomerPanelProvider extends PanelProvider
             ->authPasswordBroker('customers')
             ->profile(isSimple: false)
             ->favicon(asset('images/favicon.ico'))
-            ->brandLogo(asset('images/logo.svg'))
+            ->brandLogo(asset('images/logo.webp'))
             ->darkMode(false)
             ->brandLogoHeight('2rem')
             ->colors([
