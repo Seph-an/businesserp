@@ -99,8 +99,8 @@ RUN npm ci --no-audit --no-fund \
     && php artisan filament:assets \
     && php artisan vendor:publish --tag=laravel-assets --force --ansi
 
-COPY mysql-init.sql /docker-entrypoint-initdb.d/init.sql
-COPY build-install.sh /tmp/build-install.sh
+COPY docker/production/mysql-init.sql /docker-entrypoint-initdb.d/init.sql
+COPY docker/production/build-install.sh /tmp/build-install.sh
 RUN chmod +x /tmp/build-install.sh \
     && ADMIN_NAME="${ADMIN_NAME}" \
        ADMIN_EMAIL="${ADMIN_EMAIL}" \
@@ -110,14 +110,14 @@ RUN chmod +x /tmp/build-install.sh \
 
 RUN sed -i 's/^APP_ENV=.*/APP_ENV=production/' .env
 
-COPY php.ini /etc/php/${PHP_VERSION}/fpm/conf.d/99-aureus.ini
-COPY php.ini /etc/php/${PHP_VERSION}/cli/conf.d/99-aureus.ini
-COPY php-fpm.conf /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
+COPY docker/production/php.ini /etc/php/${PHP_VERSION}/fpm/conf.d/99-aureus.ini
+COPY docker/production/php.ini /etc/php/${PHP_VERSION}/cli/conf.d/99-aureus.ini
+COPY docker/production/php-fpm.conf /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
 
 RUN rm -f /etc/nginx/sites-enabled/default /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/aureus.conf
+COPY docker/production/nginx.conf /etc/nginx/conf.d/aureus.conf
 
-COPY supervisord.conf /etc/supervisor/conf.d/aureus.conf
+COPY docker/production/supervisord.conf /etc/supervisor/conf.d/aureus.conf
 
 RUN mkdir -p /run/php /var/log/supervisor /var/log/aureus
 
@@ -125,7 +125,7 @@ RUN chown -R www-data:www-data /var/www/aureuserp /var/log/aureus \
     && chmod -R 775 storage bootstrap/cache \
     && find storage bootstrap/cache -type d -exec chmod g+s {} +
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY docker/production/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 RUN apt-get purge -y git nodejs \
