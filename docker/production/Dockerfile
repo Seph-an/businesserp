@@ -127,7 +127,7 @@ RUN apt-get purge -y git nodejs \
 
 EXPOSE 80
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s \
     CMD curl -fsS http://127.0.0.1/health || exit 1
 
 ENTRYPOINT ["bash", "/usr/local/bin/entrypoint.sh"]

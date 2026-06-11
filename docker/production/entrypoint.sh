@@ -47,7 +47,7 @@ set_env APP_DEBUG "${APP_DEBUG:-false}"
 [ -n "$APP_TIMEZONE" ] && set_env APP_TIMEZONE "$APP_TIMEZONE"
 
 log "Waiting for database connection ($DB_CONNECTION) at ${DB_HOST}:${DB_PORT}..."
-for i in $(seq 1 60); do
+while true; do
     if [ "$DB_CONNECTION" == "mysql" ]; then
         PDO_DSN="mysql:host=${DB_HOST};port=${DB_PORT};dbname=${DB_DATABASE}"
     elif [ "$DB_CONNECTION" == "pgsql" ]; then
@@ -62,10 +62,7 @@ for i in $(seq 1 60); do
         break
     fi
 
-    if [ "$i" -eq 60 ]; then
-        log "ERROR: cannot reach database at ${DB_HOST}:${DB_PORT} after 60s."
-        exit 1
-    fi
+    log "Database not reachable yet. Retrying in 1s..."
     sleep 1
 done
 
