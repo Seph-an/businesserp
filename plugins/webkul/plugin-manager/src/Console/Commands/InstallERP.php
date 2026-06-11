@@ -134,7 +134,9 @@ class InstallERP extends Command
         $this->info('🗑️  Wiping database...');
 
         try {
-            Artisan::call('migrate:fresh', [], $this->getOutput());
+            Artisan::call('migrate:fresh', [
+                '--force' => $this->option('force'),
+            ], $this->getOutput());
             $this->info('✅ Database wiped successfully.');
         } catch (Exception $e) {
             $this->error('❌ Failed to wipe database: '.$e->getMessage());

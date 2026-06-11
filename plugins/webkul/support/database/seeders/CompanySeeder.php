@@ -28,9 +28,13 @@ class CompanySeeder extends Seeder
                 throw new Exception('Required tables are missing.');
             }
 
-            DB::table('partners_partners')->delete();
-            DB::table('companies')->delete();
+            Schema::disableForeignKeyConstraints();
+
             DB::table('users')->delete();
+            DB::table('companies')->delete();
+            DB::table('partners_partners')->delete();
+
+            Schema::enableForeignKeyConstraints();
 
             $user = User::first();
 
