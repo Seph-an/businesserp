@@ -24,7 +24,6 @@ RUN apt-get update && apt-get install -y \
     && apt-get update && apt-get install -y \
         imagemagick \
         libmagickwand-dev \
-        mysql-server \
         nginx \
         supervisor \
     && rm -rf /var/lib/apt/lists/*
@@ -41,6 +40,7 @@ RUN apt-get update && apt-get install -y \
         php${PHP_VERSION}-intl \
         php${PHP_VERSION}-mbstring \
         php${PHP_VERSION}-mysql \
+        php${PHP_VERSION}-pgsql \
         php${PHP_VERSION}-soap \
         php${PHP_VERSION}-xml \
         php${PHP_VERSION}-zip \
@@ -98,15 +98,6 @@ RUN npm ci --no-audit --no-fund \
     && php artisan package:discover --ansi \
     && php artisan filament:assets \
     && php artisan vendor:publish --tag=laravel-assets --force --ansi
-
-COPY docker/production/mysql-init.sql /docker-entrypoint-initdb.d/init.sql
-COPY docker/production/build-install.sh /tmp/build-install.sh
-RUN chmod +x /tmp/build-install.sh \
-    && ADMIN_NAME="${ADMIN_NAME}" \
-       ADMIN_EMAIL="${ADMIN_EMAIL}" \
-       ADMIN_PASSWORD="${ADMIN_PASSWORD}" \
-       bash /tmp/build-install.sh \
-    && rm /tmp/build-install.sh
 
 RUN sed -i 's/^APP_ENV=.*/APP_ENV=production/' .env
 

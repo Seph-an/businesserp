@@ -179,7 +179,9 @@ class InstallERP extends Command
     {
         $this->info('⚙️ Running database migrations...');
 
-        Artisan::call('migrate', [], $this->getOutput());
+        Artisan::call('migrate', [
+            '--force' => $this->option('force'),
+        ], $this->getOutput());
 
         $this->info('✅ Migrations completed successfully.');
     }
@@ -191,7 +193,9 @@ class InstallERP extends Command
     {
         $this->info('⚙️ Running database seeders...');
 
-        Artisan::call('db:seed', [], $this->getOutput());
+        Artisan::call('db:seed', [
+            '--force' => $this->option('force'),
+        ], $this->getOutput());
 
         $this->info('✅ Seeders completed successfully.');
     }
