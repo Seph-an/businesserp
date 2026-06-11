@@ -67,6 +67,7 @@ while true; do
 done
 
 log "Checking system installation status..."
+INSTALL_SUCCESS=true
 if [ ! -f "storage/installed" ]; then
     log "System not installed. Running erp:install..."
     
@@ -79,13 +80,26 @@ if [ ! -f "storage/installed" ]; then
         php artisan key:generate --force --no-interaction
     fi
 
-    php artisan erp:install --force --no-interaction \
+    if ! php artisan erp:install --force --no-interaction \
         --admin-name="${ADMIN_NAME:-Administrator}" \
         --admin-email="${ADMIN_EMAIL:-admin@example.com}" \
-        --admin-password="${ADMIN_PASSWORD:-password}"
+        --admin-password="${ADMIN_PASSWORD:-password}"; then
+        log "ERROR: erp:install failed. Capturing logs and staying alive for inspection..."
+        INSTALL_SUCCESS=false
+    fi
 else
     log "System already installed. Running migrations..."
-    php artisan migrate --force --no-interaction
+    if ! php artisan migrate --force --no-interaction; then
+        log "ERROR: migrations failed. Capturing logs and staying alive for inspection..."
+        INSTALL_SUCCESS=false
+    fi
+fi
+
+if [ "$INSTALL_SUCCESS" = false ]; then
+    log "!!! INITIALIZATION FAILED !!!"
+    log "The container will stay alive so you can inspect the logs via 'docker logs'."
+    log "Healthcheck will remain 'unhealthy' to prevent traffic routing."
+    while true; do sleep 60; done
 fi
 
 log "Refreshing cached configuration..."

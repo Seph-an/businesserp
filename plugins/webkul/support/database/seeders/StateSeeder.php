@@ -26,9 +26,14 @@ class StateSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
-            })->toArray();
+            });
 
-            DB::table('states')->insert($formattedStates);
+            foreach ($formattedStates as $state) {
+                DB::table('states')->updateOrInsert(
+                    ['code' => $state['code'], 'country_id' => $state['country_id']],
+                    $state
+                );
+            }
         }
     }
 }

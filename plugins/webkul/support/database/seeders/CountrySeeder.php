@@ -29,9 +29,14 @@ class CountrySeeder extends Seeder
                     'created_at'     => now(),
                     'updated_at'     => now(),
                 ];
-            })->toArray();
+            });
 
-            DB::table('countries')->insert($formattedCountries);
+            foreach ($formattedCountries as $country) {
+                DB::table('countries')->updateOrInsert(
+                    ['code' => $country['code']],
+                    $country
+                );
+            }
         }
     }
 }
