@@ -17,43 +17,31 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
+        if (DB::table('companies')->exists()) {
+            return;
+        }
+
         DB::beginTransaction();
 
         try {
-            if (
-                ! Schema::hasTable('users')
-                || ! Schema::hasTable('companies')
-                || ! Schema::hasTable('partners_partners')
-            ) {
-                throw new Exception('Required tables are missing.');
-            }
-
-            Schema::disableForeignKeyConstraints();
-
-            DB::table('users')->delete();
-            DB::table('companies')->delete();
-            DB::table('partners_partners')->delete();
-
-            Schema::enableForeignKeyConstraints();
-
             $user = User::first();
 
             $partnerId = DB::table('partners_partners')->insertGetId([
                 'sub_type'         => 'company',
-                'company_registry' => 'DUMREG780',
-                'name'             => 'DummyCorp LLC',
-                'email'            => 'dummy@dummycorp.local',
-                'website'          => 'http://dummycorp.local',
-                'tax_id'           => 'DUM123456',
-                'phone'            => '1234567890',
-                'mobile'           => '1234567890',
+                'company_registry' => 'GAPREG780',
+                'name'             => 'Gap Recruitment Services Limited',
+                'email'            => 'info@gaprecruitment.co.ke',
+                'website'          => 'https://gaprecruitment.co.ke',
+                'tax_id'           => 'GAP123456',
+                'phone'            => '254123456789',
+                'mobile'           => '254123456789',
                 'creator_id'       => $user?->id,
-                'color'            => '#AAAAAA',
+                'color'            => '#004A99',
                 'created_at'       => now(),
                 'updated_at'       => now(),
             ]);
 
-            $currency = Currency::first();
+            $currency = Currency::where('code', 'KES')->first() ?? Currency::first();
 
             if (! $currency) {
                 throw new Exception('No currencies found in the database. Please run CurrencySeeder first.');
@@ -61,19 +49,19 @@ class CompanySeeder extends Seeder
 
             DB::table('companies')->insert([
                 'sort'                => 1,
-                'name'                => 'DummyCorp LLC',
-                'tax_id'              => 'DUM123456',
-                'registration_number' => 'DUMREG789',
-                'company_id'          => 'DUMCOMP001',
+                'name'                => 'Gap Recruitment Services Limited',
+                'tax_id'              => 'GAP123456',
+                'registration_number' => 'GAPREG789',
+                'company_id'          => 'GAPCOMP001',
                 'creator_id'          => $user?->id,
-                'email'               => 'dummy@dummycorp.local',
-                'phone'               => '1234567890',
-                'mobile'              => '1234567890',
-                'color'               => '#AAAAAA',
+                'email'               => 'info@gaprecruitment.co.ke',
+                'phone'               => '254123456789',
+                'mobile'              => '254123456789',
+                'color'               => '#004A99',
                 'is_active'           => true,
-                'founded_date'        => '2000-01-01',
+                'founded_date'        => '2010-01-01',
                 'currency_id'         => $currency->id,
-                'website'             => 'http://dummycorp.local',
+                'website'             => 'https://gaprecruitment.co.ke',
                 'partner_id'          => $partnerId,
                 'created_at'          => now(),
                 'updated_at'          => now(),
