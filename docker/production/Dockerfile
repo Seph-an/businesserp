@@ -72,14 +72,15 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/aureuserp
 
-RUN git clone --depth 1 --branch ${APP_REF} ${REPO_URL} . \
-    && composer install \
+COPY . .
+
+RUN composer install \
         --no-dev \
         --no-interaction \
         --prefer-dist \
         --optimize-autoloader \
         --no-scripts \
-    && rm -rf .git /root/.composer/cache
+    && rm -rf /root/.composer/cache
 
 RUN cp .env.example .env \
     && sed -i 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env \
@@ -126,7 +127,7 @@ RUN apt-get purge -y git nodejs \
 
 EXPOSE 80
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=300s --retries=3 \
     CMD curl -fsS http://127.0.0.1/health || exit 1
 
 ENTRYPOINT ["bash", "/usr/local/bin/entrypoint.sh"]

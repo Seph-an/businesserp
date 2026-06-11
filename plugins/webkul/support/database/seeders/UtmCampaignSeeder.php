@@ -15,8 +15,6 @@ class UtmCampaignSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('utm_campaigns')->delete();
-
         $user = User::first();
         $stage = UtmStage::first();
         $company = Company::first();
@@ -25,7 +23,6 @@ class UtmCampaignSeeder extends Seeder
 
         $utmCampaigns = [
             [
-                'id'               => 1,
                 'user_id'          => $user?->id,
                 'stage_id'         => $stage?->id,
                 'color'            => null,
@@ -39,7 +36,6 @@ class UtmCampaignSeeder extends Seeder
                 'company_id'       => $company?->id,
             ],
             [
-                'id'               => 2,
                 'user_id'          => $user?->id,
                 'stage_id'         => $stage?->id,
                 'color'            => null,
@@ -53,7 +49,6 @@ class UtmCampaignSeeder extends Seeder
                 'company_id'       => $company?->id,
             ],
             [
-                'id'               => 3,
                 'user_id'          => $user?->id,
                 'stage_id'         => $stage?->id,
                 'color'            => null,
@@ -67,7 +62,6 @@ class UtmCampaignSeeder extends Seeder
                 'company_id'       => $company?->id,
             ],
             [
-                'id'               => 4,
                 'user_id'          => $user?->id,
                 'stage_id'         => $stage?->id,
                 'color'            => null,
@@ -82,6 +76,11 @@ class UtmCampaignSeeder extends Seeder
             ],
         ];
 
-        DB::table('utm_campaigns')->insert($utmCampaigns);
+        foreach ($utmCampaigns as $campaign) {
+            DB::table('utm_campaigns')->updateOrInsert(
+                ['name' => $campaign['name']],
+                $campaign
+            );
+        }
     }
 }

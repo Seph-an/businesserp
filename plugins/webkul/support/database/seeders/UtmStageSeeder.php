@@ -13,9 +13,6 @@ class UtmStageSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('utm_campaigns')->delete();
-        DB::table('utm_stages')->delete();
-
         $now = now();
 
         $user = User::first();
@@ -54,6 +51,11 @@ class UtmStageSeeder extends Seeder
             ],
         ];
 
-        DB::table('utm_stages')->insert($utmStages);
+        foreach ($utmStages as $stage) {
+            DB::table('utm_stages')->updateOrInsert(
+                ['name' => $stage['name']],
+                $stage
+            );
+        }
     }
 }
