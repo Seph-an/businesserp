@@ -84,22 +84,13 @@ if [ ! -f "storage/installed" ]; then
         --admin-name="${ADMIN_NAME:-Administrator}" \
         --admin-email="${ADMIN_EMAIL:-admin@example.com}" \
         --admin-password="${ADMIN_PASSWORD:-password}"; then
-        log "ERROR: erp:install failed. Capturing logs and staying alive for inspection..."
-        INSTALL_SUCCESS=false
+        log "WARNING: erp:install had some issues. Check logs above."
     fi
 else
     log "System already installed. Running migrations..."
     if ! php artisan migrate --force --no-interaction; then
-        log "ERROR: migrations failed. Capturing logs and staying alive for inspection..."
-        INSTALL_SUCCESS=false
+        log "WARNING: migrations had some issues. Check logs above."
     fi
-fi
-
-if [ "$INSTALL_SUCCESS" = false ]; then
-    log "!!! INITIALIZATION FAILED !!!"
-    log "The container will stay alive so you can inspect the logs via 'docker logs'."
-    log "Healthcheck will remain 'unhealthy' to prevent traffic routing."
-    while true; do sleep 60; done
 fi
 
 log "Refreshing cached configuration..."

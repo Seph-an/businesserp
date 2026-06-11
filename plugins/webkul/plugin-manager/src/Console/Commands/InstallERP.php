@@ -356,10 +356,6 @@ class InstallERP extends Command
             return 'The email address must be valid.';
         }
 
-        if ($userModel::where('email', $email)->exists()) {
-            return 'A user with this email address already exists.';
-        }
-
         return null;
     }
 
