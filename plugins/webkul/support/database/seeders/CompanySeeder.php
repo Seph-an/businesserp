@@ -41,7 +41,7 @@ class CompanySeeder extends Seeder
                 'updated_at'       => now(),
             ]);
 
-            $currency = Currency::where('code', 'KES')->first() ?? Currency::first();
+            $currency = Currency::where('name', 'KES')->first() ?? Currency::first();
 
             if (! $currency) {
                 throw new Exception('No currencies found in the database. Please run CurrencySeeder first.');

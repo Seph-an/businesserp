@@ -238,7 +238,7 @@ class InstallERP extends Command
         if (! $defaultCompany) {
             $this->warn('No default company found. Creating "Gap Recruitment Services Limited" as fallback...');
 
-            $currency = Currency::where('code', 'KES')->first() ?? Currency::first();
+            $currency = Currency::where('name', 'KES')->first() ?? Currency::first();
 
             if (! $currency) {
                  $this->error('❌ Critical Error: No currencies found. Ensure CurrencySeeder has run.');
