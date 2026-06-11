@@ -49,10 +49,10 @@ class CompanySeeder extends Seeder
                 'updated_at'       => now(),
             ]);
 
-            $currency = Currency::find(1);
+            $currency = Currency::first();
 
             if (! $currency) {
-                throw new Exception('Currency with ID 1 not found.');
+                throw new Exception('No currencies found in the database. Please run CurrencySeeder first.');
             }
 
             DB::table('companies')->insert([
@@ -78,6 +78,8 @@ class CompanySeeder extends Seeder
             DB::commit();
         } catch (Throwable $e) {
             DB::rollBack();
+
+            throw $e;
         }
     }
 }

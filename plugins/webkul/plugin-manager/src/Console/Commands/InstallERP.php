@@ -233,6 +233,24 @@ class InstallERP extends Command
 
         $defaultCompany = Company::first();
 
+        if (! $defaultCompany) {
+            $this->warn('No default company found. Creating "Gap Recruitment Services Limited" as fallback...');
+
+            $currency = Currency::where('code', 'KES')->first() ?? Currency::first();
+
+            if (! $currency) {
+                 $this->error('❌ Critical Error: No currencies found. Ensure CurrencySeeder has run.');
+                 exit(1);
+            }
+
+            $defaultCompany = Company::create([
+                'name'        => 'Gap Recruitment Services Limited',
+                'email'       => $this->option('admin-email') ?? 'admin@example.com',
+                'is_active'   => true,
+                'currency_id' => $currency->id,
+            ]);
+        }
+
         $userModel = app(Utils::getAuthProviderFQCN());
 
         $adminData = $this->getAdminCredentials($userModel);
