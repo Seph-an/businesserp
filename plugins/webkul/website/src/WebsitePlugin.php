@@ -67,7 +67,7 @@ class WebsitePlugin implements Plugin
                             ->sort(2)
                             ->visible(fn (): bool => (bool) count(Account::getClusteredComponents())),
                     ])
-                    ->navigationItems(fn () => $this->getNavigationItems()->toArray())
+                    ->navigationItems($this->getNavigationItems()->toArray())
                     ->renderHook(
                         PanelsRenderHook::TOPBAR_END,
                         fn (): string => view('website::filament.customer.header.auth-links', [
