@@ -4,6 +4,7 @@ namespace Webkul\PluginManager\Console\Commands;
 
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Webkul\PluginManager\Models\Plugin;
@@ -49,18 +50,40 @@ class InstallAllPlugins extends Command
                 continue;
             }
 
+            $commandName = "{$pluginId}:install";
+            
+            if (! Artisan::has($commandName)) {
+                $this->warn("Plugin installer command '{$commandName}' not found. Marking as installed in DB.");
+                Plugin::where('name', $pluginId)->update(['is_installed' => true, 'is_active' => true]);
+                continue;
+            }
+
             $this->info("Installing plugin: <comment>{$pluginId}</comment>...");
 
             try {
-                // Each plugin's :install command handles its own migrations and seeders
-                $this->call("{$pluginId}:install", [
-                    '--force'          => $this->option('force'),
-                    '--no-interaction' => true,
+                $command = Artisan::all()[$commandName];
+                $params = ['--no-interaction' => true];
+                
+                // Only pass --force if the command actually supports it
+                if ($command->getDefinition()->hasOption('force')) {
+                    $params['--force'] = $this->option('force');
+                }
+
+                $this->call($commandName, $params);
+
+                // Force update database state to ensure frontend visibility
+                Plugin::where('name', $pluginId)->update([
+                    'is_installed' => true, 
+                    'is_active' => true
                 ]);
 
                 $installedCount++;
             } catch (\Exception $e) {
                 $this->error("Failed to install plugin '{$pluginId}': {$e->getMessage()}");
+                
+                // Even if command fails, if it reached here, we might want to ensure 
+                // the record exists so we can fix it in UI
+                Plugin::updateOrCreate(['name' => $pluginId], ['is_active' => true]);
             }
         }
 

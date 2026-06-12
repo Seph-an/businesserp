@@ -42,13 +42,18 @@ class InstallCommand extends Command
 
     public $hidden = true;
 
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'package:install {--force : Force installation}';
+
     public function __construct(Package $package)
     {
-        $this->signature = $package->shortName().':install';
-
-        $this->description = 'Install '.$package->name;
-
         $this->package = $package;
+
+        $this->signature = $package->shortName().':install {--force : Force installation}';
 
         parent::__construct();
     }
