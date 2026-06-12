@@ -94,6 +94,11 @@ if [ "$IS_INSTALLED" = false ]; then
         --admin-password="${ADMIN_PASSWORD:-password}"; then
         log "WARNING: erp:install had some issues. Check logs above."
     fi
+
+    log "Performing initial plugin installation..."
+    if ! php artisan plugins:install --force --no-interaction; then
+        log "WARNING: initial plugins:install had some issues."
+    fi
 else
     log "System already installed. Running migrations and plugin updates..."
     if ! php artisan migrate --force --no-interaction; then

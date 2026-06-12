@@ -59,12 +59,17 @@ class Plugin extends Model implements Sortable
     {
         $packages = [];
 
-        $panels = app('filament')->getPanels();
+        // First, try to get packages from registered Filament plugins
+        $panels = [];
+        try {
+            $panels = app('filament')->getPanels();
+        } catch (\Throwable $e) {
+            // Filament might not be ready yet during some CLI commands
+        }
 
         foreach ($panels as $panel) {
             foreach ($panel->getPlugins() as $pluginId => $plugin) {
                 $pluginClass = get_class($plugin);
-
                 $serviceProviderClass = str_replace('Plugin', 'ServiceProvider', $pluginClass);
 
                 if (! class_exists($serviceProviderClass)) {
@@ -72,15 +77,12 @@ class Plugin extends Model implements Sortable
                 }
 
                 $reflection = new ReflectionClass($serviceProviderClass);
-
                 if (! $reflection->isSubclassOf(PackageServiceProvider::class)) {
                     continue;
                 }
 
                 $serviceProvider = new $serviceProviderClass(app());
-
                 $package = new Package;
-
                 $serviceProvider->configureCustomPackage($package);
 
                 if ($package->isCore) {
@@ -88,8 +90,48 @@ class Plugin extends Model implements Sortable
                 }
 
                 $package->basePath = dirname($reflection->getFileName(), 2);
-
                 $packages[$pluginId] = $package;
+            }
+        }
+
+        // Second, scan the filesystem to find plugins that might not be registered yet
+        $pluginPath = base_path('plugins/webkul');
+        if (is_dir($pluginPath)) {
+            $directories = array_diff(scandir($pluginPath), ['.', '..']);
+            
+            foreach ($directories as $dir) {
+                $composerPath = "$pluginPath/$dir/composer.json";
+                if (! file_exists($composerPath)) {
+                    continue;
+                }
+
+                $composer = json_decode(file_get_contents($composerPath), true);
+                $providers = data_get($composer, 'extra.laravel.providers', []);
+                
+                foreach ($providers as $provider) {
+                    if (! class_exists($provider)) {
+                        continue;
+                    }
+
+                    $reflection = new ReflectionClass($provider);
+                    if (! $reflection->isSubclassOf(PackageServiceProvider::class)) {
+                        continue;
+                    }
+
+                    $serviceProvider = new $provider(app());
+                    $package = new Package;
+                    $serviceProvider->configureCustomPackage($package);
+
+                    if ($package->isCore) {
+                        continue;
+                    }
+
+                    $pluginId = $package->name;
+                    if (! isset($packages[$pluginId])) {
+                        $package->basePath = dirname($reflection->getFileName(), 2);
+                        $packages[$pluginId] = $package;
+                    }
+                }
             }
         }
 
