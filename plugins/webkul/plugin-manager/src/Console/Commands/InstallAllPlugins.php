@@ -42,6 +42,8 @@ class InstallAllPlugins extends Command
 
         $this->info('Found ' . count($plugins) . ' potential plugins.');
 
+        $allCommands = Artisan::all();
+
         $installedCount = 0;
         foreach ($plugins as $pluginId => $package) {
             // Skip core plugins as they are handled by erp:install or auto-loaded
@@ -52,7 +54,7 @@ class InstallAllPlugins extends Command
 
             $commandName = "{$pluginId}:install";
             
-            if (! Artisan::has($commandName)) {
+            if (! isset($allCommands[$commandName])) {
                 $this->warn("Plugin installer command '{$commandName}' not found. Marking as installed in DB.");
                 Plugin::where('name', $pluginId)->update(['is_installed' => true, 'is_active' => true]);
                 continue;
@@ -61,7 +63,7 @@ class InstallAllPlugins extends Command
             $this->info("Installing plugin: <comment>{$pluginId}</comment>...");
 
             try {
-                $command = Artisan::all()[$commandName];
+                $command = $allCommands[$commandName];
                 $params = ['--no-interaction' => true];
                 
                 // Only pass --force if the command actually supports it

@@ -53,9 +53,11 @@ class InstallCommand extends Command
     {
         $this->package = $package;
 
-        $this->signature = $package->shortName().':install {--force : Force installation}';
+        $this->signature = $package->shortName().':install';
 
         parent::__construct();
+
+        $this->addOption('force', null, null, 'Force installation');
     }
 
     public function handle()
