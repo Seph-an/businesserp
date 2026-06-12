@@ -81,7 +81,17 @@ class InstallERP extends Command
     {
         $filePath = storage_path('installed');
 
-        return File::exists($filePath);
+        if (File::exists($filePath)) {
+            return true;
+        }
+
+        try {
+            $userModel = app(Utils::getAuthProviderFQCN());
+
+            return $userModel::where('is_default', true)->exists();
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     /**

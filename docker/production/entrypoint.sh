@@ -67,8 +67,16 @@ while true; do
 done
 
 log "Checking system installation status..."
-INSTALL_SUCCESS=true
-if [ ! -f "storage/installed" ]; then
+IS_INSTALLED=false
+if [ -f "storage/installed" ]; then
+    IS_INSTALLED=true
+elif php -r "require 'vendor/autoload.php'; \$app = require_once 'bootstrap/app.php'; \$kernel = \$app->make(Illuminate\Contracts\Console\Kernel::class); \$kernel->bootstrap(); try { if (class_exists(\BezhanSalleh\FilamentShield\Support\Utils::class)) { \$model = app(\BezhanSalleh\FilamentShield\Support\Utils::getAuthProviderFQCN()); if (\$model::where('is_default', true)->exists()) exit(0); } } catch(\Throwable \$e) {} exit(1);" 2>/dev/null; then
+    IS_INSTALLED=true
+    # Ensure marker file exists if database confirms installation
+    touch "storage/installed"
+fi
+
+if [ "$IS_INSTALLED" = false ]; then
     log "System not installed. Running erp:install..."
     
     # Ensure APP_KEY exists before running install if not provided via env
@@ -87,9 +95,14 @@ if [ ! -f "storage/installed" ]; then
         log "WARNING: erp:install had some issues. Check logs above."
     fi
 else
-    log "System already installed. Running migrations..."
+    log "System already installed. Running migrations and plugin updates..."
     if ! php artisan migrate --force --no-interaction; then
         log "WARNING: migrations had some issues. Check logs above."
+    fi
+
+    log "Ensuring recruitment plugin is installed..."
+    if ! php artisan recruitments:install --force --no-interaction; then
+        log "WARNING: recruitments:install had some issues. Check logs above."
     fi
 fi
 
