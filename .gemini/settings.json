@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "aureus-dev": {
+      "command": "php",
+      "args": ["artisan", "mcp:dev"]
+    },
+    "aureus-erp": {
+      "url": "http://127.0.0.1:8080/mcp/erp",
+      "type": "http"
+    }
+  }
+}

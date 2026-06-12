@@ -100,9 +100,9 @@ else
         log "WARNING: migrations had some issues. Check logs above."
     fi
 
-    log "Ensuring recruitment plugin is installed..."
-    if ! php artisan recruitments:install --force --no-interaction; then
-        log "WARNING: recruitments:install had some issues. Check logs above."
+    log "Ensuring all plugins are installed and updated..."
+    if ! php artisan plugins:install --force --no-interaction; then
+        log "WARNING: plugins:install had some issues. Check logs above."
     fi
 fi
 

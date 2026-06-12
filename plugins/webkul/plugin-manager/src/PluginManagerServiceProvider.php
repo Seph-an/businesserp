@@ -29,6 +29,7 @@ class PluginManagerServiceProvider extends PackageServiceProvider
             ->runsSeeders()
             ->hasCommands([
                 InstallERP::class,
+                InstallAllPlugins::class,
                 FindMissingTranslations::class,
             ]);
     }
