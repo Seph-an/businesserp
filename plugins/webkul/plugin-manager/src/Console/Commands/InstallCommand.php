@@ -2,6 +2,7 @@
 
 namespace Webkul\PluginManager\Console\Commands;
 
+use BezhanSalleh\FilamentShield\Support\Utils;
 use Closure;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -450,7 +451,7 @@ class InstallCommand extends Command
                 throw new RuntimeException("Failed to generate admin panel permissions. Error: {$errorOutput}");
             }
 
-            $role = Role::first();
+            $role = Role::where('name', Utils::getPanelUserRoleName())->first() ?: Role::first();
 
             if (! $role) {
                 $this->warn('⚠️  No role found to sync permissions.');

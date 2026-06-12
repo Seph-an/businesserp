@@ -2,7 +2,10 @@
 
 namespace Webkul\PluginManager\Console\Commands;
 
+use BezhanSalleh\FilamentShield\Support\Utils;
 use Illuminate\Console\Command;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Webkul\PluginManager\Models\Plugin;
 
 class InstallAllPlugins extends Command
@@ -36,10 +39,13 @@ class InstallAllPlugins extends Command
             return;
         }
 
+        $this->info('Found ' . count($plugins) . ' potential plugins.');
+
         $installedCount = 0;
         foreach ($plugins as $pluginId => $package) {
             // Skip core plugins as they are handled by erp:install or auto-loaded
             if ($package->isCore) {
+                $this->line("Skipping core plugin: <info>{$pluginId}</info>");
                 continue;
             }
 
@@ -47,7 +53,6 @@ class InstallAllPlugins extends Command
 
             try {
                 // Each plugin's :install command handles its own migrations and seeders
-                // as defined in its ServiceProvider (e.g., runsMigrations(), runsSeeders())
                 $this->call("{$pluginId}:install", [
                     '--force'          => $this->option('force'),
                     '--no-interaction' => true,
@@ -60,6 +65,22 @@ class InstallAllPlugins extends Command
         }
 
         if ($installedCount > 0) {
+            $this->newLine();
+            $this->info('🛡 Running final permission synchronization...');
+            
+            $this->call('shield:generate', [
+                '--all'    => true,
+                '--option' => 'permissions',
+                '--panel'  => 'admin',
+            ]);
+
+            $role = Role::where('name', Utils::getPanelUserRoleName())->first() ?: Role::first();
+            if ($role) {
+                $permissions = Permission::all();
+                $role->syncPermissions($permissions);
+                $this->info("✅ All permissions synchronized to role: <comment>{$role->name}</comment>");
+            }
+
             $this->info("🎉 Bulk plugin installation completed! Installed/Updated {$installedCount} plugins.");
         } else {
             $this->info('No new non-core plugins required installation.');
