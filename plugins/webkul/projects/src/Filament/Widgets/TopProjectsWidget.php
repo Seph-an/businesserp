@@ -81,6 +81,7 @@ class TopProjectsWidget extends BaseWidget
 
         return $table
             ->query($query)
+            ->useUnorderedPagination()
             ->paginated(false)
             ->columns([
                 TextColumn::make('project_name')

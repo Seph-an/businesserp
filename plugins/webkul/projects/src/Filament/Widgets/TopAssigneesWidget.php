@@ -75,6 +75,7 @@ class TopAssigneesWidget extends BaseWidget
 
         return $table
             ->query($query)
+            ->useUnorderedPagination()
             ->paginated(false)
             ->columns([
                 TextColumn::make('user_name')
