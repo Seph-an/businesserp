@@ -32,25 +32,11 @@ class TopAssigneesWidget extends BaseWidget
 
     public function getTableRecordKey(Model|array $record): string
     {
-        return 'user_id';
+        return 'id';
     }
 
     public function table(Table $table): Table
     {
-        $query = Timesheet::query();
-
-        if (! empty($this->pageFilters['selectedProjects'])) {
-            $query->whereIn('project_id', $this->pageFilters['selectedProjects']);
-        }
-
-        if (! empty($this->pageFilters['selectedAssignees'])) {
-            $query->whereIn('user_id', $this->pageFilters['selectedAssignees']);
-        }
-
-        if (! empty($this->pageFilters['selectedPartners'])) {
-            $query->whereIn('analytic_records.partner_id', $this->pageFilters['selectedPartners']);
-        }
-
         $startDate = ! is_null($this->pageFilters['startDate'] ?? null) ?
             Carbon::parse($this->pageFilters['startDate']) :
             null;
@@ -59,17 +45,32 @@ class TopAssigneesWidget extends BaseWidget
             Carbon::parse($this->pageFilters['endDate']) :
             now();
 
-        $query = $query
+        $subQuery = Timesheet::query()
             ->join('users', 'users.id', '=', 'analytic_records.user_id')
             ->selectRaw('
-                user_id,
+                analytic_records.user_id as id,
                 users.name as user_name,
-                SUM(unit_amount) as total_hours,
-                COUNT(DISTINCT task_id) as total_tasks
+                SUM(analytic_records.unit_amount) as total_hours,
+                COUNT(DISTINCT analytic_records.task_id) as total_tasks
             ')
             ->whereBetween('analytic_records.created_at', [$startDate, $endDate])
-            ->groupBy('user_id', 'users.name')
-            ->orderByRaw('SUM(unit_amount) DESC')
+            ->groupBy('analytic_records.user_id', 'users.name');
+
+        if (! empty($this->pageFilters['selectedProjects'])) {
+            $subQuery->whereIn('analytic_records.project_id', $this->pageFilters['selectedProjects']);
+        }
+
+        if (! empty($this->pageFilters['selectedAssignees'])) {
+            $subQuery->whereIn('analytic_records.user_id', $this->pageFilters['selectedAssignees']);
+        }
+
+        if (! empty($this->pageFilters['selectedPartners'])) {
+            $subQuery->whereIn('analytic_records.partner_id', $this->pageFilters['selectedPartners']);
+        }
+
+        $query = Timesheet::query()
+            ->fromSub($subQuery, 'top_assignees')
+            ->orderByDesc('total_hours')
             ->limit(10);
 
         return $table

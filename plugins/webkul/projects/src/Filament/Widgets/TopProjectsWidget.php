@@ -32,31 +32,11 @@ class TopProjectsWidget extends BaseWidget
 
     public function getTableRecordKey(Model|array $record): string
     {
-        return 'project_id';
+        return 'id';
     }
 
     public function table(Table $table): Table
     {
-        $query = Timesheet::query();
-
-        if (! empty($this->pageFilters['selectedProjects'])) {
-            $query->whereIn('project_id', $this->pageFilters['selectedProjects']);
-        }
-
-        if (! empty($this->pageFilters['selectedAssignees'])) {
-            $query->whereIn('analytic_records.user_id', $this->pageFilters['selectedAssignees']);
-        }
-
-        if (! empty($this->pageFilters['selectedTags'])) {
-            $query->whereHas('project.tags', function ($q) {
-                $q->whereIn('projects_project_tag.tag_id', $this->pageFilters['selectedTags']);
-            });
-        }
-
-        if (! empty($this->pageFilters['selectedPartners'])) {
-            $query->whereIn('analytic_records.partner_id', $this->pageFilters['selectedPartners']);
-        }
-
         $startDate = ! is_null($this->pageFilters['startDate'] ?? null) ?
             Carbon::parse($this->pageFilters['startDate']) :
             null;
@@ -65,17 +45,38 @@ class TopProjectsWidget extends BaseWidget
             Carbon::parse($this->pageFilters['endDate']) :
             now();
 
-        $query = $query
+        $subQuery = Timesheet::query()
             ->join('projects_projects', 'projects_projects.id', '=', 'analytic_records.project_id')
             ->selectRaw('
-                analytic_records.project_id,
+                analytic_records.project_id as id,
                 projects_projects.name as project_name,
                 SUM(analytic_records.unit_amount) as total_hours,
                 COUNT(DISTINCT analytic_records.task_id) as total_tasks
             ')
             ->whereBetween('analytic_records.created_at', [$startDate, $endDate])
-            ->groupBy('analytic_records.project_id', 'projects_projects.name')
-            ->orderByRaw('SUM(analytic_records.unit_amount) DESC')
+            ->groupBy('analytic_records.project_id', 'projects_projects.name');
+
+        if (! empty($this->pageFilters['selectedProjects'])) {
+            $subQuery->whereIn('analytic_records.project_id', $this->pageFilters['selectedProjects']);
+        }
+
+        if (! empty($this->pageFilters['selectedAssignees'])) {
+            $subQuery->whereIn('analytic_records.user_id', $this->pageFilters['selectedAssignees']);
+        }
+
+        if (! empty($this->pageFilters['selectedTags'])) {
+            $subQuery->whereHas('project.tags', function ($q) {
+                $q->whereIn('projects_project_tag.tag_id', $this->pageFilters['selectedTags']);
+            });
+        }
+
+        if (! empty($this->pageFilters['selectedPartners'])) {
+            $subQuery->whereIn('analytic_records.partner_id', $this->pageFilters['selectedPartners']);
+        }
+
+        $query = Timesheet::query()
+            ->fromSub($subQuery, 'top_projects')
+            ->orderByDesc('total_hours')
             ->limit(10);
 
         return $table
