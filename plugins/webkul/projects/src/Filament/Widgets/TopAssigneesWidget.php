@@ -73,9 +73,11 @@ class TopAssigneesWidget extends BaseWidget
             ->orderByDesc('total_hours')
             ->limit(10);
 
+        $query->getModel()->setTable('top_assignees');
+        $query->getModel()->setKeyName('id');
+
         return $table
             ->query($query)
-            ->useUnorderedPagination()
             ->paginated(false)
             ->columns([
                 TextColumn::make('user_name')

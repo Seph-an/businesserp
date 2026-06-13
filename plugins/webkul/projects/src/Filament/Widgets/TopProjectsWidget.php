@@ -79,9 +79,11 @@ class TopProjectsWidget extends BaseWidget
             ->orderByDesc('total_hours')
             ->limit(10);
 
+        $query->getModel()->setTable('top_projects');
+        $query->getModel()->setKeyName('id');
+
         return $table
             ->query($query)
-            ->useUnorderedPagination()
             ->paginated(false)
             ->columns([
                 TextColumn::make('project_name')
