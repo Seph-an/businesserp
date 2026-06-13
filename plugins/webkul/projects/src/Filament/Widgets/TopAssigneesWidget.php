@@ -32,7 +32,7 @@ class TopAssigneesWidget extends BaseWidget
 
     public function getTableRecordKey(Model|array $record): string
     {
-        return 'id';
+        return 'user_id';
     }
 
     public function table(Table $table): Table
@@ -74,7 +74,7 @@ class TopAssigneesWidget extends BaseWidget
 
         return $table
             ->query($query)
-            ->defaultPaginationPageOption(5)
+            ->paginated(false)
             ->columns([
                 TextColumn::make('user_name')
                     ->label(__('projects::filament/widgets/top-assignees.table-columns.user'))

@@ -32,7 +32,7 @@ class TopProjectsWidget extends BaseWidget
 
     public function getTableRecordKey(Model|array $record): string
     {
-        return 'id';
+        return 'project_id';
     }
 
     public function table(Table $table): Table
@@ -80,7 +80,7 @@ class TopProjectsWidget extends BaseWidget
 
         return $table
             ->query($query)
-            ->defaultPaginationPageOption(5)
+            ->paginated(false)
             ->columns([
                 TextColumn::make('project_name')
                     ->label(__('projects::filament/widgets/top-projects.table-columns.project-name'))
