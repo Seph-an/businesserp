@@ -27,7 +27,7 @@ class BlogChart extends ChartWidget
 
         $query = Post::query()
             ->select(
-                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month_key'),
+                DB::raw("TO_CHAR(created_at, 'YYYY-MM') as month_key"),
                 'is_published',
                 DB::raw('COUNT(*) as count')
             );
