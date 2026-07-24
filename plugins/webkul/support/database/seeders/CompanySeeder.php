@@ -35,6 +35,7 @@ class CompanySeeder extends Seeder
                 'tax_id'           => 'GAP123456',
                 'phone'            => '254123456789',
                 'mobile'           => '254123456789',
+
                 'creator_id'       => $user?->id,
                 'color'            => '#004A99',
                 'created_at'       => now(),
@@ -58,10 +59,12 @@ class CompanySeeder extends Seeder
                 'phone'               => '254123456789',
                 'mobile'              => '254123456789',
                 'color'               => '#004A99',
+
                 'is_active'           => true,
                 'founded_date'        => '2010-01-01',
                 'currency_id'         => $currency->id,
                 'website'             => 'https://gaprecruitment.co.ke',
+
                 'partner_id'          => $partnerId,
                 'created_at'          => now(),
                 'updated_at'          => now(),
