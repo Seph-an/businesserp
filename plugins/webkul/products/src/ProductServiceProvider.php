@@ -10,6 +10,8 @@ use Webkul\PluginManager\Package;
 use Webkul\PluginManager\PackageServiceProvider;
 use Webkul\Product\Models\Category;
 use Webkul\Product\Models\Product;
+use Webkul\Product\Models\ProductAttribute;
+use Webkul\Product\Observers\ProductAttributeObserver;
 use Webkul\Product\Observers\UOMObserver;
 use Webkul\Support\Models\UOM;
 
@@ -42,11 +44,14 @@ class ProductServiceProvider extends PackageServiceProvider
                 '2025_02_21_053249 _create_products_product_combinations_table',
                 '2025_07_28_080116_alter_products_products_table',
                 '2026_04_15_044431_add_columns_in_products_product_suppliers_table',
+                '2026_09_15_000000_consolidate_products_price_rules_into_price_lists_table',
+                '2026_09_15_000100_add_price_list_id_to_partners_partners_table',
             ])
             ->hasSeeder('Webkul\\Product\\Database\Seeders\\DatabaseSeeder')
             ->runsMigrations()
             ->hasSettings([
                 '2025_01_17_094022_create_products_product_settings',
+                '2026_09_15_000300_add_enable_price_lists_to_products_product_settings',
             ])
             ->runsSettings()
             ->hasInstallCommand(function (InstallCommand $command) {
@@ -63,7 +68,14 @@ class ProductServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        if (! Package::isPluginInstalled(static::$name)) {
+            return;
+        }
+
         UOM::observe(UOMObserver::class);
+
+        ProductAttribute::observe(ProductAttributeObserver::class);
+
     }
 
     public function packageRegistered(): void

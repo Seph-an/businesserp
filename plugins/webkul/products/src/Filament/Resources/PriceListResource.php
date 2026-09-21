@@ -2,10 +2,6 @@
 
 namespace Webkul\Product\Filament\Resources;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
@@ -13,6 +9,8 @@ use Webkul\Product\Filament\Resources\PriceListResource\Pages\CreatePriceList;
 use Webkul\Product\Filament\Resources\PriceListResource\Pages\EditPriceList;
 use Webkul\Product\Filament\Resources\PriceListResource\Pages\ListPriceLists;
 use Webkul\Product\Filament\Resources\PriceListResource\Pages\ViewPriceList;
+use Webkul\Product\Filament\Resources\PriceListResource\Schemas\PriceListForm;
+use Webkul\Product\Filament\Resources\PriceListResource\Tables\PriceListsTable;
 use Webkul\Product\Models\PriceList;
 
 class PriceListResource extends Resource
@@ -23,37 +21,31 @@ class PriceListResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-list-bullet';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     public static function getNavigationLabel(): string
     {
-        return 'Price Lists';
+        return __('products::filament/resources/price-list.navigation.title');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('products::models/price-list.title');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('products::models/price-list.plural-title');
     }
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                //
-            ]);
+        return PriceListForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                //
-            ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+        return PriceListsTable::configure($table);
     }
 
     public static function getRelations(): array

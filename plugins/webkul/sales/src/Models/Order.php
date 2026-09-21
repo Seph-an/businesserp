@@ -21,23 +21,29 @@ use Webkul\Inventory\Models\Operation;
 use Webkul\Inventory\Models\ProcurementGroup;
 use Webkul\Inventory\Models\Warehouse;
 use Webkul\PluginManager\Package;
+use Webkul\Product\Models\PriceList;
 use Webkul\Sale\Database\Factories\OrderFactory;
-use Webkul\Sale\Filament\Clusters\Orders\Resources\OrderResource;
-use Webkul\Sale\Filament\Clusters\Orders\Resources\QuotationResource;
 use Webkul\Sale\Enums\InvoiceStatus;
 use Webkul\Sale\Enums\OrderDeliveryStatus;
 use Webkul\Sale\Enums\OrderState;
+use Webkul\Sale\Filament\Clusters\Orders\Resources\OrderResource;
+use Webkul\Sale\Filament\Clusters\Orders\Resources\QuotationResource;
 use Webkul\Security\Models\User;
-use Webkul\Security\Traits\HasPermissionScope;
+use Webkul\Security\Traits\HasOwnershipScope;
 use Webkul\Support\Models\Company;
 use Webkul\Support\Models\Currency;
 use Webkul\Support\Models\UtmCampaign;
 use Webkul\Support\Models\UTMMedium;
 use Webkul\Support\Models\UTMSource;
+use Webkul\Support\Services\SequenceService;
+use Webkul\Support\Traits\BelongsToCompany;
+use Webkul\Support\Traits\ChecksCompanyConsistency;
 
 class Order extends Model
 {
-    use HasChatter, HasCustomFields, HasFactory, HasLogActivity, HasPermissionScope, SoftDeletes;
+    use BelongsToCompany;
+    use ChecksCompanyConsistency;
+    use HasChatter, HasCustomFields, HasFactory, HasLogActivity, HasOwnershipScope, SoftDeletes;
 
     public const ACTIVITY_PLAN_PLUGIN = 'sales';
 
@@ -82,6 +88,7 @@ class Order extends Model
         'amount_total',
         'warehouse_id',
         'procurement_group_id',
+        'price_list_id',
     ];
 
     protected $casts = [
@@ -128,6 +135,11 @@ class Order extends Model
     public function partner()
     {
         return $this->belongsTo(Partner::class);
+    }
+
+    public function priceList()
+    {
+        return $this->belongsTo(PriceList::class, 'price_list_id');
     }
 
     public function getQtyToInvoiceAttribute()
@@ -242,7 +254,15 @@ class Order extends Model
 
     public function updateName()
     {
-        $this->name = 'SO/'.$this->id;
+        if (filled($this->name)) {
+            return;
+        }
+
+        $this->name = SequenceService::next('sales.order', $this->company_id, [
+            'name'         => 'Sales Order',
+            'prefix'       => 'SO/',
+            'initial_from' => static::withoutGlobalScopes(),
+        ]);
     }
 
     public function handleOrderCreation()
@@ -251,7 +271,7 @@ class Order extends Model
 
         $this->creator_id ??= $authUser->id;
         $this->user_id ??= $authUser->id;
-        $this->company_id ??= $authUser?->default_company_id;
+        $this->company_id ??= current_company_id();
 
         $this->state ??= OrderState::DRAFT;
 
@@ -275,6 +295,8 @@ class Order extends Model
         });
 
         static::saving(function ($order) {
+            $order->computeCurrencyId();
+
             $order->updateName();
 
             $order->lines->each->update(['state' => $order->state]);
@@ -298,6 +320,18 @@ class Order extends Model
         }
     }
 
+    public function computeCurrencyId(): void
+    {
+        $priceListCurrencyId = $this->price_list_id
+            ? PriceList::query()->whereKey($this->price_list_id)->value('currency_id')
+            : null;
+
+        $this->currency_id = $priceListCurrencyId
+            ?? Company::query()->whereKey($this->company_id)->value('currency_id')
+            ?? $this->currency_id
+            ?? default_currency_id();
+    }
+
     public function computeWarehouseId()
     {
         if (! Package::isPluginInstalled('inventories')) {
@@ -310,5 +344,15 @@ class Order extends Model
     protected static function newFactory(): OrderFactory
     {
         return OrderFactory::new();
+    }
+
+    public function companyConsistentFields(): array
+    {
+        return [
+            'warehouse_id'       => Warehouse::class,
+            'fiscal_position_id' => FiscalPosition::class,
+            'payment_term_id'    => PaymentTerm::class,
+            'journal_id'         => Journal::class,
+        ];
     }
 }

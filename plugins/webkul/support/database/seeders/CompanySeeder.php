@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
-use Webkul\Security\Models\User;
+use Webkul\Support\Models\Company;
 use Webkul\Support\Models\Currency;
 
 class CompanySeeder extends Seeder
@@ -17,64 +17,52 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
-        if (DB::table('companies')->exists()) {
-            return;
-        }
-
-        DB::beginTransaction();
-
         try {
-            $user = User::first();
+            $this->seedDefaultCompany();
+        } catch (Throwable $e) {
+            $this->command?->warn('Skipping default company seeding: '.$e->getMessage());
+        }
+    }
 
-            $partnerId = DB::table('partners_partners')->insertGetId([
-                'sub_type'         => 'company',
-                'company_registry' => 'GAPREG780',
-                'name'             => 'Gap Recruitment Services Limited',
-                'email'            => 'info@gaprecruitment.co.ke',
-                'website'          => 'https://gaprecruitment.co.ke',
-                'tax_id'           => 'GAP123456',
-                'phone'            => '254123456789',
-                'mobile'           => '254123456789',
-
-                'creator_id'       => $user?->id,
-                'color'            => '#004A99',
-                'created_at'       => now(),
-                'updated_at'       => now(),
-            ]);
-
-            $currency = Currency::where('name', 'KES')->first() ?? Currency::first();
-
-            if (! $currency) {
-                throw new Exception('No currencies found in the database. Please run CurrencySeeder first.');
+    /**
+     * Seed the default company and its partner.
+     */
+    protected function seedDefaultCompany(): void
+    {
+        DB::transaction(function () {
+            if (
+                ! Schema::hasTable('users')
+                || ! Schema::hasTable('companies')
+                || ! Schema::hasTable('partners_partners')
+            ) {
+                throw new Exception('Required tables are missing.');
             }
 
-            DB::table('companies')->insert([
+            if (DB::table('companies')->exists()) {
+                return;
+            }
+
+            $currency = Currency::resolveDefault();
+
+            if (! $currency) {
+                throw new Exception('No currency is available to assign to the default company.');
+            }
+
+            Company::create([
                 'sort'                => 1,
                 'name'                => 'Gap Recruitment Services Limited',
                 'tax_id'              => 'GAP123456',
                 'registration_number' => 'GAPREG789',
                 'company_id'          => 'GAPCOMP001',
-                'creator_id'          => $user?->id,
                 'email'               => 'info@gaprecruitment.co.ke',
                 'phone'               => '254123456789',
                 'mobile'              => '254123456789',
                 'color'               => '#004A99',
-
                 'is_active'           => true,
                 'founded_date'        => '2010-01-01',
                 'currency_id'         => $currency->id,
                 'website'             => 'https://gaprecruitment.co.ke',
-
-                'partner_id'          => $partnerId,
-                'created_at'          => now(),
-                'updated_at'          => now(),
             ]);
-
-            DB::commit();
-        } catch (Throwable $e) {
-            DB::rollBack();
-
-            throw $e;
-        }
+        });
     }
 }

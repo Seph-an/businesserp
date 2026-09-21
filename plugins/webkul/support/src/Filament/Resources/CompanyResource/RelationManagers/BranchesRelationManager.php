@@ -436,25 +436,25 @@ class BranchesRelationManager extends RelationManager
                             ->schema([
                                 Section::make(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.address-information.title'))
                                     ->schema([
-                                        TextEntry::make('address.street1')
+                                        TextEntry::make('street1')
                                             ->icon('heroicon-o-map-pin')
                                             ->placeholder('—')
                                             ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.address-information.entries.street1')),
-                                        TextEntry::make('address.street2')
+                                        TextEntry::make('street2')
                                             ->placeholder('—')
                                             ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.address-information.entries.street2')),
-                                        TextEntry::make('address.city')
+                                        TextEntry::make('city')
                                             ->icon('heroicon-o-building-library')
                                             ->placeholder('—')
                                             ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.address-information.entries.city')),
-                                        TextEntry::make('address.zip')
+                                        TextEntry::make('zip')
                                             ->placeholder('—')
                                             ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.address-information.entries.zip-code')),
-                                        TextEntry::make('address.country.name')
+                                        TextEntry::make('country.name')
                                             ->icon('heroicon-o-globe-alt')
                                             ->placeholder('—')
                                             ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.address-information.entries.country')),
-                                        TextEntry::make('address.state.name')
+                                        TextEntry::make('state.name')
                                             ->placeholder('—')
                                             ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.address-information.entries.state')),
                                     ])
@@ -470,33 +470,33 @@ class BranchesRelationManager extends RelationManager
                                             ->icon('heroicon-o-calendar')
                                             ->placeholder('—')
                                             ->date()
-                                            ->label(__('security::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.additional-information.entries.company-foundation-date')),
+                                            ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.additional-information.entries.company-foundation-date')),
                                         IconEntry::make('is_active')
-                                            ->label(__('security::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.additional-information.entries.status'))
+                                            ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.address-information.sections.additional-information.entries.status'))
                                             ->boolean(),
                                     ])
                                     ->columns(2),
                             ]),
 
-                        Tab::make(__('security::filament/resources/company/relation-managers/manage-branch.infolist.tabs.contact-information.title'))
+                        Tab::make(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.contact-information.title'))
                             ->schema([
-                                Section::make(__('security::filament/resources/company/relation-managers/manage-branch.infolist.tabs.contact-information.sections.contact-information.title'))
+                                Section::make(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.contact-information.sections.contact-information.title'))
                                     ->schema([
                                         TextEntry::make('phone')
                                             ->icon('heroicon-o-phone')
                                             ->placeholder('—')
-                                            ->label(__('security::filament/resources/company/relation-managers/manage-branch.infolist.tabs.contact-information.sections.contact-information.entries.phone-number')),
+                                            ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.contact-information.sections.contact-information.entries.phone-number')),
                                         TextEntry::make('mobile')
                                             ->icon('heroicon-o-device-phone-mobile')
                                             ->placeholder('—')
-                                            ->label(__('security::filament/resources/company/relation-managers/manage-branch.infolist.tabs.contact-information.sections.contact-information.entries.mobile-number')),
+                                            ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.contact-information.sections.contact-information.entries.mobile-number')),
                                         TextEntry::make('email')
                                             ->icon('heroicon-o-envelope')
                                             ->placeholder('—')
                                             ->copyable()
                                             ->copyMessage('Email copied')
                                             ->copyMessageDuration(1500)
-                                            ->label(__('security::filament/resources/company/relation-managers/manage-branch.infolist.tabs.contact-information.sections.contact-information.entries.email-address')),
+                                            ->label(__('support::filament/resources/company/relation-managers/manage-branch.infolist.tabs.contact-information.sections.contact-information.entries.email-address')),
                                     ])
                                     ->columns(2),
                             ]),

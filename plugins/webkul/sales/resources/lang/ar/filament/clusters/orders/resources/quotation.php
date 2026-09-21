@@ -23,6 +23,7 @@ return [
                     'quotation-date' => 'تاريخ عرض السعر',
                     'order-date'     => 'تاريخ الطلب',
                     'payment-term'   => 'شروط الدفع',
+                    'price-list'     => 'قائمة الأسعار',
                 ],
             ],
         ],
@@ -122,7 +123,7 @@ return [
                             'actions' => [
                                 'tooltip' => [
                                     'add-order-line' => 'إضافة بند طلب',
-                                    'already-added' => 'تمت الإضافة إلى الطلب',
+                                    'already-added'  => 'تمت الإضافة إلى الطلب',
                                 ],
 
                                 'notifications' => [
@@ -186,8 +187,8 @@ return [
                         'title' => 'معلومات إضافية',
 
                         'fields' => [
-                            'company'  => 'الشركة',
-                            'currency' => 'العملة',
+                            'company'    => 'الشركة',
+                            'currency'   => 'العملة',
                         ],
                     ],
                 ],
